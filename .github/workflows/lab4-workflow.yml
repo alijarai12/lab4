@@ -4,9 +4,14 @@ on:
   release:
     types: [published]
 
+permissions:
+  packages: write    # ✅ Required to publish packages to GitHub Packages
+  contents: read     # ✅ Needed to checkout code
+
 jobs:
   npm-package:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -19,3 +24,8 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
+
+      - name: Publish to GitHub NPM Registry
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # ✅ Auth token provided by GitHub Actions
